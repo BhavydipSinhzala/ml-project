@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinRisk AI — Loan Default Prediction Engine</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="navbar-brand">
+                <div class="brand-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="navbar-brand-text">
+                    <h1>FinRisk Intelligence</h1>
+                    <small>Loan Default Prediction</small>
+                </div>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/predict">Predict Risk</a></li>
+                <li><a href="/models">ML Model</a></li>
+                <li><a href="/about">About</a></li>
+                <li class="nav-status-badge">
+                    <span class="status-dot"></span>
+                    <span>Model Online</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+
+            <!-- Hero Section -->
+            <section class="hero-wrapper">
+                <div class="hero-content">
+                    <div class="hero-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        <span>Enterprise Machine Learning System</span>
+                    </div>
+                    <h1>Loan Default Risk Assessment Engine</h1>
+                    <p>Evaluate borrower default probability instantly using an advanced Gradient Boosting Classifier trained on 255,000+ verified financial records with high accuracy.</p>
+                    <div class="hero-actions">
+                        <a href="/predict" class="btn btn-primary btn-lg">
+                            <span>Run Default Prediction</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                        <a href="/models" class="btn btn-ghost-white btn-lg">View Model Metrics</a>
+                        <a href="/about" class="btn btn-ghost-white btn-lg">Project Docs</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metrics / Stats Grid -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z"/><path d="M6 14h12M6 10h12M6 18h8"/></svg>
+                    </div>
+                    <div>
+                        <div class="val">255,347</div>
+                        <div class="lbl">Training Records</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <div>
+                        <div class="val">Binary (0 / 1)</div>
+                        <div class="lbl">Target Outcome</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div>
+                        <div class="val">Gradient Boost</div>
+                        <div class="lbl">Ensemble Model</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div>
+                        <div class="val" id="stat-accuracy">&mdash;</div>
+                        <div class="lbl">Model Accuracy</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow & Features Split Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                            </div>
+                            <h2>System Workflow</h2>
+                        </div>
+                    </div>
+                    <ol style="padding-left: 20px; color: var(--text-sec); font-size: 0.9rem; line-height: 2;">
+                        <li><strong>Input Applicant Profile:</strong> Fill financial, employment, & loan specifications.</li>
+                        <li><strong>Data Preprocessing:</strong> Features normalized via StandardScaler & categorical encoding.</li>
+                        <li><strong>Machine Learning Inference:</strong> Model computes probability score & risk classification.</li>
+                        <li><strong>Explainable Insights:</strong> Returns positive vs. risk factors contributing to the score.</li>
+                    </ol>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            </div>
+                            <h2>Important Financial Notice</h2>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-sec); font-size: 0.9rem; line-height: 1.7;">
+                        This application evaluates borrower default probability based on empirical statistical patterns extracted from financial training data.
+                    </p>
+                    <p style="color: var(--text-sec); font-size: 0.9rem; line-height: 1.7; margin-top: 10px;">
+                        The generated probability and risk tier serve as decision-support insights and should be used alongside comprehensive credit underwriting procedures.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>FinRisk AI — Loan Default Prediction Engine</span>
+            <span>Gradient Boosting Classifier &bull; Scikit-Learn</span>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

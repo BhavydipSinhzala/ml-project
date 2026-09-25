@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Project — FinRisk AI System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="navbar-brand">
+                <div class="brand-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="navbar-brand-text">
+                    <h1>FinRisk Intelligence</h1>
+                    <small>Loan Default Prediction</small>
+                </div>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/predict">Predict Risk</a></li>
+                <li><a href="/models">ML Model</a></li>
+                <li><a href="/about" class="active">About</a></li>
+                <li class="nav-status-badge">
+                    <span class="status-dot"></span>
+                    <span>Model Online</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Project Overview & Architecture</h1>
+                <p class="page-desc">Technical specification, dataset breakdown, and machine learning pipeline implementation details.</p>
+            </div>
+
+            <div class="card">
+                
+                <!-- Objective -->
+                <div style="margin-bottom: 28px;">
+                    <div class="card-header" style="margin-bottom: 12px; padding-bottom: 6px;">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                            </div>
+                            <h2>Project Objective</h2>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.925rem; color: var(--text-sec); line-height: 1.7;">
+                        The FinRisk AI system estimates loan default probability using a trained Gradient Boosting Classifier. The system evaluates applicant financial health, employment background, credit lines, and requested loan terms to predict whether an applicant is likely to default (Target variable <strong>Default</strong>: 0 = No Default, 1 = Default).
+                    </p>
+                </div>
+
+                <!-- Dataset Specifications -->
+                <div style="margin-bottom: 28px;">
+                    <div class="card-header" style="margin-bottom: 12px; padding-bottom: 6px;">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                            </div>
+                            <h2>Dataset Specifications</h2>
+                        </div>
+                    </div>
+                    <table class="tech-tbl">
+                        <tr><th>Total Dataset Records</th><td>255,347 loan applications</td></tr>
+                        <tr><th>Target Variable</th><td>Default (0 = No Default, 1 = Default)</td></tr>
+                        <tr><th>Class Distribution</th><td>~88.4% Non-Default, ~11.6% Default (Imbalanced Dataset)</td></tr>
+                        <tr><th>Source File</th><td>Loan_default.csv</td></tr>
+                        <tr><th>Feature Count</th><td>17 total attributes (9 Numeric, 4 Categorical, 3 Binary, 1 ID)</td></tr>
+                    </table>
+                </div>
+
+                <!-- Features Breakdown -->
+                <div style="margin-bottom: 28px;">
+                    <div class="card-header" style="margin-bottom: 12px; padding-bottom: 6px;">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            </div>
+                            <h2>Feature Schema</h2>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: var(--surface-alt); padding: 16px; border-radius: var(--radius-sm);">
+                            <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;">Numerical & Financial Features</h4>
+                            <ul style="font-size: 0.875rem; color: var(--text-sec); padding-left: 18px; line-height: 1.8;">
+                                <li>Age</li>
+                                <li>Annual Income ($)</li>
+                                <li>Requested Loan Amount ($)</li>
+                                <li>Credit Score</li>
+                                <li>Months Employed</li>
+                                <li>Number of Credit Lines</li>
+                                <li>Interest Rate (%)</li>
+                                <li>Loan Term (Months)</li>
+                                <li>Debt-to-Income (DTI) Ratio</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--surface-alt); padding: 16px; border-radius: var(--radius-sm);">
+                            <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;">Categorical & Binary Indicators</h4>
+                            <ul style="font-size: 0.875rem; color: var(--text-sec); padding-left: 18px; line-height: 1.8;">
+                                <li>Education Level</li>
+                                <li>Employment Type</li>
+                                <li>Marital Status</li>
+                                <li>Loan Purpose</li>
+                                <li>Has Mortgage Indicator</li>
+                                <li>Has Dependents Indicator</li>
+                                <li>Has Co-Signer Indicator</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preprocessing Pipeline -->
+                <div style="margin-bottom: 28px;">
+                    <div class="card-header" style="margin-bottom: 12px; padding-bottom: 6px;">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            </div>
+                            <h2>Preprocessing & Pipeline</h2>
+                        </div>
+                    </div>
+                    <ol style="font-size: 0.9rem; color: var(--text-sec); padding-left: 20px; line-height: 1.9;">
+                        <li><strong>Deduplication:</strong> Removal of duplicate records across the dataset.</li>
+                        <li><strong>One-Hot Encoding:</strong> Conversion of categorical columns (Education, Employment, Purpose, Marital Status) into binary dummy features.</li>
+                        <li><strong>Binary Mapping:</strong> Standardizing boolean toggles (HasMortgage, HasDependents, HasCoSigner).</li>
+                        <li><strong>StandardScaler Normalization:</strong> Feature scaling applied to numerical inputs for balanced model convergence.</li>
+                        <li><strong>Train/Test Partitioning:</strong> 80/20 stratified split (`random_state=42`).</li>
+                    </ol>
+                </div>
+
+                <!-- Technology Stack -->
+                <div>
+                    <div class="card-header" style="margin-bottom: 12px; padding-bottom: 6px;">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            </div>
+                            <h2>Technology Stack</h2>
+                        </div>
+                    </div>
+                    <table class="tech-tbl">
+                        <tr><th>Frontend Interface</th><td>HTML5, CSS3, JavaScript (Vanilla ES6)</td></tr>
+                        <tr><th>Backend API</th><td>Python, Flask Framework</td></tr>
+                        <tr><th>Machine Learning Engine</th><td>Scikit-Learn (GradientBoostingClassifier)</td></tr>
+                        <tr><th>Data Engineering</th><td>Pandas, NumPy</td></tr>
+                        <tr><th>Model Artifacts</th><td>Joblib Serialization</td></tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>FinRisk AI — Loan Default Prediction Engine</span>
+            <span>Gradient Boosting Classifier &bull; Scikit-Learn</span>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction — FinRisk AI System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="navbar-brand">
+                <div class="brand-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="navbar-brand-text">
+                    <h1>FinRisk Intelligence</h1>
+                    <small>Loan Default Prediction</small>
+                </div>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/predict" class="active">Predict Risk</a></li>
+                <li><a href="/models">ML Model</a></li>
+                <li><a href="/about">About</a></li>
+                <li class="nav-status-badge">
+                    <span class="status-dot"></span>
+                    <span>Model Online</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- High-Tech Loading Overlay -->
+    <div class="loading-overlay hidden" id="loading-overlay">
+        <div class="spinner-glow"></div>
+        <div class="loading-text" id="loading-text-msg">Analyzing applicant financial profile...</div>
+    </div>
+    
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <div class="page-header">
+                <h1 class="page-title">Loan Default Risk Assessment</h1>
+                <p class="page-desc">Enter applicant details below to calculate default risk probability using Gradient Boosting Classifier.</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card">
+
+                <!-- Sample Data Presets Bar -->
+                <div class="presets-card">
+                    <div class="presets-info">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        <span class="presets-label">Load Preset Applicant Profile:</span>
+                    </div>
+                    <div class="preset-buttons">
+                        <button type="button" class="preset-btn" data-preset="default">Standard Profile</button>
+                        <button type="button" class="preset-btn" data-preset="high_risk">High Risk Profile</button>
+                        <button type="button" class="preset-btn" data-preset="borderline">Borderline Profile</button>
+                    </div>
+                </div>
+
+                <form id="predict-form" novalidate>
+                    
+                    <!-- Section 1: Applicant Demographics -->
+                    <div class="form-section-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <span>1. Applicant Information</span>
+                    </div>
+
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label for="age">
+                                <span>Age (Years)</span>
+                                <span class="label-hint">18 – 69</span>
+                            </label>
+                            <input type="number" class="form-control" id="age" name="age" placeholder="e.g. 38" min="18" max="69" required>
+                            <div class="form-error">Age must be between 18 and 69</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="education">Education Level</label>
+                            <select class="form-control" id="education" name="education" required>
+                                <option value="Bachelor's">Bachelor's Degree</option>
+                                <option value="Master's">Master's Degree</option>
+                                <option value="High School">High School</option>
+                                <option value="PhD">PhD / Doctorate</option>
+                            </select>
+                            <div class="form-error">Select education level</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maritalStatus">Marital Status</label>
+                            <select class="form-control" id="maritalStatus" name="maritalStatus" required>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Single">Single</option>
+                            </select>
+                            <div class="form-error">Select marital status</div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Financial Information -->
+                    <div class="form-section-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <span>2. Financial Profile</span>
+                    </div>
+
+                    <div class="form-grid-4">
+                        <div class="form-group">
+                            <label for="income">
+                                <span>Annual Income ($)</span>
+                                <span class="label-hint">$15k – $150k</span>
+                            </label>
+                            <input type="number" class="form-control" id="income" name="income" placeholder="e.g. 82000" min="15000" max="150000" required>
+                            <div class="form-error">Must be $15,000 to $150,000</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="creditScore">
+                                <span>Credit Score</span>
+                                <span class="label-hint">300 – 850</span>
+                            </label>
+                            <input type="number" class="form-control" id="creditScore" name="creditScore" placeholder="e.g. 740" min="300" max="850" required>
+                            <div class="form-error">Must be between 300 and 850</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dtiRatio">
+                                <span>DTI Ratio</span>
+                                <span class="label-hint">0.10 – 0.90</span>
+                            </label>
+                            <input type="number" class="form-control" id="dtiRatio" name="dtiRatio" placeholder="e.g. 0.28" min="0.1" max="0.9" step="0.01" required>
+                            <div class="form-error">Must be between 0.10 and 0.90</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numCreditLines">
+                                <span>Active Credit Lines</span>
+                                <span class="label-hint">1 – 4</span>
+                            </label>
+                            <input type="number" class="form-control" id="numCreditLines" name="numCreditLines" placeholder="e.g. 4" min="1" max="4" required>
+                            <div class="form-error">Must be between 1 and 4</div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Employment Information -->
+                    <div class="form-section-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        <span>3. Employment Details</span>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="employmentType">Employment Type</label>
+                            <select class="form-control" id="employmentType" name="employmentType" required>
+                                <option value="Full-time">Full-time Employee</option>
+                                <option value="Part-time">Part-time Employee</option>
+                                <option value="Self-employed">Self-employed</option>
+                                <option value="Unemployed">Unemployed</option>
+                            </select>
+                            <div class="form-error">Select employment type</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="monthsEmployed">
+                                <span>Months Employed</span>
+                                <span class="label-hint">0 – 120 Months</span>
+                            </label>
+                            <input type="number" class="form-control" id="monthsEmployed" name="monthsEmployed" placeholder="e.g. 60" min="0" max="120" required>
+                            <div class="form-error">Must be between 0 and 120</div>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Loan Specifications -->
+                    <div class="form-section-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span>4. Loan Request & Specifications</span>
+                    </div>
+
+                    <div class="form-grid-4">
+                        <div class="form-group">
+                            <label for="loanAmount">
+                                <span>Loan Amount ($)</span>
+                                <span class="label-hint">$5k – $250k</span>
+                            </label>
+                            <input type="number" class="form-control" id="loanAmount" name="loanAmount" placeholder="e.g. 28000" min="5000" max="250000" required>
+                            <div class="form-error">Must be $5,000 to $250,000</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="interestRate">
+                                <span>Interest Rate (%)</span>
+                                <span class="label-hint">2% – 25%</span>
+                            </label>
+                            <input type="number" class="form-control" id="interestRate" name="interestRate" placeholder="e.g. 9.5" min="2" max="25" step="0.1" required>
+                            <div class="form-error">Must be 2% to 25%</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loanTerm">Loan Term (Months)</label>
+                            <select class="form-control" id="loanTerm" name="loanTerm" required>
+                                <option value="12">12 Months (1 Year)</option>
+                                <option value="24">24 Months (2 Years)</option>
+                                <option value="36" selected>36 Months (3 Years)</option>
+                                <option value="48">48 Months (4 Years)</option>
+                                <option value="60">60 Months (5 Years)</option>
+                            </select>
+                            <div class="form-error">Select loan term</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loanPurpose">Loan Purpose</label>
+                            <select class="form-control" id="loanPurpose" name="loanPurpose" required>
+                                <option value="Auto">Auto Financing</option>
+                                <option value="Business">Business Expansion</option>
+                                <option value="Education">Education</option>
+                                <option value="Home">Home Purchase/Renovation</option>
+                                <option value="Other">Other Personal</option>
+                            </select>
+                            <div class="form-error">Select loan purpose</div>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: Risk Factors & Guarantees -->
+                    <div class="form-section-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>5. Risk Factors & Guarantees</span>
+                    </div>
+
+                    <div class="switch-grid">
+                        <label class="switch-item" for="hasMortgage">
+                            <div class="switch-info">
+                                <span class="sw-label">Has Mortgage</span>
+                                <span class="sw-sub">Active real estate property mortgage</span>
+                            </div>
+                            <input type="checkbox" class="toggle" id="hasMortgage" name="hasMortgage">
+                        </label>
+
+                        <label class="switch-item" for="hasDependents">
+                            <div class="switch-info">
+                                <span class="sw-label">Has Dependents</span>
+                                <span class="sw-sub">Financially dependent family members</span>
+                            </div>
+                            <input type="checkbox" class="toggle" id="hasDependents" name="hasDependents">
+                        </label>
+
+                        <label class="switch-item" for="hasCoSigner">
+                            <div class="switch-info">
+                                <span class="sw-label">Has Co-Signer</span>
+                                <span class="sw-sub">Guarantor present on loan application</span>
+                            </div>
+                            <input type="checkbox" class="toggle" id="hasCoSigner" name="hasCoSigner">
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 36px;">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span>Generate Default Prediction Risk Score</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Result Section -->
+            <div id="result-section" class="result-container hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+                            </div>
+                            <h2>Risk Prediction Result</h2>
+                        </div>
+                    </div>
+
+                    <div class="result-banner" id="result-banner">
+                        <div class="result-icon-badge" id="result-icon"></div>
+                        <div class="result-banner-content">
+                            <h3 id="result-title"></h3>
+                            <p id="result-subtitle"></p>
+                        </div>
+                    </div>
+
+                    <div class="result-grid">
+                        <div class="result-card-item">
+                            <div class="r-label">Default Decision</div>
+                            <div class="r-value" id="result-prediction"></div>
+                        </div>
+
+                        <div class="result-card-item">
+                            <div class="r-label">Default Probability</div>
+                            <div class="r-value" id="result-probability"></div>
+                            <div class="prob-meter-wrapper">
+                                <div class="prob-bar">
+                                    <div class="prob-fill" id="result-probability-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result-card-item">
+                            <div class="r-label">Risk Classification</div>
+                            <div class="r-value" id="result-risk-tier"></div>
+                        </div>
+
+                        <div class="result-card-item">
+                            <div class="r-label">Inference Model</div>
+                            <div class="r-value" style="font-size: 1rem;">Gradient Boosting</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Key Factors Split Cards -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </div>
+                            <h2>Risk Factor Analysis</h2>
+                        </div>
+                    </div>
+
+                    <div class="factors-grid">
+                        <div class="factor-card positive">
+                            <div class="factor-card-header">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Positive Factors (Lowers Risk)</span>
+                            </div>
+                            <ul class="factor-list" id="positive-factors"></ul>
+                        </div>
+
+                        <div class="factor-card risk">
+                            <div class="factor-card-header">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                <span>Risk Factors (Increases Risk)</span>
+                            </div>
+                            <ul class="factor-list" id="risk-factors"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submitted Summary Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="card-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            </div>
+                            <h2>Applicant Profile Summary</h2>
+                        </div>
+                    </div>
+                    <div id="applicant-summary"></div>
+                </div>
+
+                <div class="notice notice-warn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <div>
+                        <strong>Financial Underwriting Disclaimer:</strong> This default prediction is generated via statistical pattern recognition on empirical dataset records. It should serve as a risk screening tool and not as an automated loan approval/refusal mechanism.
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button type="button" class="btn btn-outline btn-lg" id="reset-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        <span>Analyze Another Profile</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>FinRisk AI — Loan Default Prediction Engine</span>
+            <span>Gradient Boosting Classifier &bull; Scikit-Learn</span>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

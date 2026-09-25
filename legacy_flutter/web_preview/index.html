@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Loan Risk Predictor — Machine Learning Classification Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-warm: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --navy-primary: #0F172A;
+      --navy-card: #1E293B;
+      --slate-muted: #64748B;
+      --border-color: #E2E8F0;
+      
+      --sage-bg: #ECFDF5;
+      --sage-border: #6EE7B7;
+      --sage-text: #065F46;
+      --sage-pill: #10B981;
+
+      --terracotta-bg: #FEF2F2;
+      --terracotta-border: #FCA5A5;
+      --terracotta-text: #991B1B;
+      --terracotta-pill: #EF4444;
+
+      --accent-amber: #F59E0B;
+      --accent-blue: #3B82F6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    body { background-color: var(--bg-warm); color: #0F172A; padding-bottom: 80px; }
+
+    /* Header */
+    .app-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .header-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-icon {
+      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    }
+    .brand-title { font-size: 19px; font-weight: 800; color: #0F172A; letter-spacing: -0.3px; }
+    .brand-subtitle { font-size: 12px; color: var(--slate-muted); font-weight: 500; }
+    
+    .header-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #F1F5F9;
+      border: 1px solid var(--border-color);
+      color: #334155;
+    }
+    .badge-status.connected {
+      background: #ECFDF5;
+      border-color: #A7F3D0;
+      color: #065F46;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .container { max-width: 1080px; margin: 32px auto; padding: 0 20px; }
+
+    /* Preset Toolbar */
+    .preset-toolbar {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .preset-info { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #334155; }
+    .preset-btns { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .preset-btn {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      color: #1E293B;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .preset-btn:hover {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-color: #0F172A;
+      transform: translateY(-1px);
+    }
+    .preset-btn.default-active {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border-color: #BFDBFE;
+    }
+
+    /* Main Form Card */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 25px rgba(0,0,0,0.03);
+      padding: 36px;
+    }
+    .form-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .form-title { font-size: 22px; font-weight: 800; color: #0F172A; letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
+    .form-desc { font-size: 13px; color: var(--slate-muted); margin-top: 4px; }
+    
+    .model-selector-wrap {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .model-selector-wrap label { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+    .model-select {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0F172A;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #475569;
+      margin: 28px 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    @media (max-width: 820px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 13px; font-weight: 600; color: #334155; }
+    .input-wrapper input, .input-wrapper select {
+      width: 100%;
+      padding: 12px 14px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 14px;
+      color: #0F172A;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-wrapper input:focus, .input-wrapper select:focus {
+      border-color: #0F172A;
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+      background: #ffffff;
+    }
+
+    .switch-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .switch-card.active { border-color: #0F172A; background: #ffffff; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05); }
+    .switch-title { font-size: 13px; font-weight: 700; color: #0F172A; }
+    .switch-sub { font-size: 11px; color: var(--slate-muted); margin-top: 2px; }
+    .toggle-pill { background: #E2E8F0; border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 700; color: var(--slate-muted); transition: all 0.2s; }
+    .switch-card.active .toggle-pill { background: #0F172A; color: #fff; }
+
+    .btn-row { display: flex; gap: 14px; margin-top: 32px; }
+    .cta-btn {
+      flex: 1;
+      height: 56px;
+      background: #0F172A;
+      color: #ffffff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+    }
+    .cta-btn:hover { background: #1E293B; transform: translateY(-1px); }
+
+    .load-default-btn {
+      height: 56px;
+      padding: 0 24px;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .load-default-btn:hover {
+      background: #DBEAFE;
+      border-color: #93C5FD;
+      transform: translateY(-1px);
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Prediction Result Banner */
+    .result-banner {
+      margin-top: 28px;
+      padding: 28px;
+      border-radius: 20px;
+      border: 1.5px solid;
+      display: none;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .result-approved { background: var(--sage-bg); border-color: var(--sage-border); color: var(--sage-text); }
+    .result-declined { background: var(--terracotta-bg); border-color: var(--terracotta-border); color: var(--terracotta-text); }
+
+    .res-badge-box {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px 18px;
+      border: 1px solid rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .binary-pill {
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .res-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .res-sub { font-size: 14px; color: #475569; margin-bottom: 18px; line-height: 1.5; }
+
+    .meter-wrap { margin-top: 14px; }
+    .meter-bar { width: 100%; height: 12px; background: #ffffff; border-radius: 6px; overflow: hidden; margin-top: 6px; border: 1px solid rgba(0,0,0,0.05); }
+    .meter-fill { height: 100%; width: 0%; transition: width 0.8s ease; }
+
+    .model-eval-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .model-eval-chip {
+      background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .eval-chip-name { font-size: 12px; font-weight: 700; color: #64748B; }
+    .eval-chip-val { font-size: 16px; font-weight: 800; }
+
+    /* Best Model Leaderboard */
+    .best-model-banner {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: #ffffff;
+      border-radius: 24px;
+      padding: 32px;
+      margin-top: 32px;
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.25);
+      border: 1px solid #334155;
+    }
+    .best-badge {
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .model-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .model-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .model-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .model-item.highlight {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1.5px solid rgba(245, 158, 11, 0.6);
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.18);
+    }
+    .model-info { display: flex; align-items: center; gap: 16px; }
+    .model-icon { font-size: 26px; }
+    .model-name { font-size: 16px; font-weight: 700; color: #ffffff; }
+    .model-desc { font-size: 12px; color: #94A3B8; margin-top: 3px; max-width: 500px; }
+    .model-score { text-align: right; min-width: 150px; }
+    .score-acc { font-size: 22px; font-weight: 800; color: #10B981; }
+    .model-item.highlight .score-acc { color: #FCD34D; }
+    .score-label { font-size: 11px; color: #94A3B8; text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+
+    .acc-bar-bg {
+      width: 150px;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+      margin-left: auto;
+    }
+    .acc-bar-fill {
+      height: 100%;
+      background: #10B981;
+      border-radius: 4px;
+    }
+    .model-item.highlight .acc-bar-fill {
+      background: #F59E0B;
+    }
+
+    /* Comparison Table Card */
+    .info-card {
+      margin-top: 24px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+    .info-header {
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .info-body { margin-top: 20px; }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+    .metrics-table th {
+      background: #F8FAFC;
+      color: #475569;
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+    .metrics-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: #1E293B;
+    }
+    .metrics-table tr:last-child td { border-bottom: none; }
+    .metrics-table tr:hover td { background: #F8FAFC; }
+
+    /* Confusion Matrix */
+    .cm-selector-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .cm-grid-container {
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr;
+      gap: 12px;
+      text-align: center;
+    }
+    @media (max-width: 640px) {
+      .cm-grid-container { grid-template-columns: 80px 1fr 1fr; gap: 8px; }
+    }
+    .cm-header {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--slate-muted);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F8FAFC;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+    }
+    .cm-cell {
+      border-radius: 14px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .cm-cell:hover { transform: translateY(-2px); }
+    .cm-cell.correct {
+      background: #ECFDF5;
+      border: 1.5px solid #A7F3D0;
+      color: #065F46;
+    }
+    .cm-cell.incorrect {
+      background: #FEF2F2;
+      border: 1.5px solid #FECACA;
+      color: #991B1B;
+    }
+    .cm-val { font-size: 24px; font-weight: 800; margin-bottom: 2px; }
+    .cm-lbl { font-size: 11px; font-weight: 700; opacity: 0.9; }
+    .cm-sub { font-size: 10px; opacity: 0.75; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- AppBar Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-icon">🛡️</div>
+      <div>
+        <div class="brand-title">Smart Loan Risk Predictor</div>
+        <div class="brand-subtitle">Machine Learning Classification System • Connected to Python ML Engine</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="badge-status connected" id="backendBadge">
+        <span class="status-dot"></span>
+        <span id="backendStatusText">ML Backend: Connected</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Quick Preset Toolbar -->
+    <div class="preset-toolbar">
+      <div class="preset-info">
+        <span>⚡ Quick Applicant Profiles:</span>
+      </div>
+      <div class="preset-btns">
+        <button type="button" class="preset-btn default-active" id="btnPresetDefault" onclick="loadApplicantPreset('default')">
+          <span>👔</span> Standard Prime Applicant
+        </button>
+        <button type="button" class="preset-btn" id="btnPresetBorderline" onclick="loadApplicantPreset('borderline')">
+          <span>⚖️</span> Moderate / Borderline
+        </button>
+        <button type="button" class="preset-btn" id="btnPresetHighRisk" onclick="loadApplicantPreset('high_risk')">
+          <span>⚠️</span> High Risk (Likely Default)
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Applicant Input Form Card -->
+    <div class="form-card">
+      <div class="form-header-row">
+        <div>
+          <div class="form-title">📋 Applicant Credit Assessment Profile</div>
+          <div class="form-desc">Input loan and applicant feature vectors to run live inference across trained classification models.</div>
+        </div>
+        <div class="model-selector-wrap">
+          <label for="activeModelSelect">Active Model:</label>
+          <select id="activeModelSelect" class="model-select" onchange="runPrediction()">
+            <option value="logistic_regression" selected>Logistic Regression (Baseline)</option>
+            <option value="gradient_boosting">Gradient Boosting (Best: 88.73%)</option>
+            <option value="decision_tree">Decision Tree</option>
+            <option value="naive_bayes">Gaussian Naive Bayes</option>
+          </select>
+        </div>
+      </div>
+
+      <form id="predictionForm" onsubmit="event.preventDefault(); runPrediction();">
+        <div class="section-label">1. Personal & Demographics</div>
+        <div class="grid-3">
+          <div class="field-group">
+            <label class="field-label">Age (Years)</label>
+            <div class="input-wrapper"><input type="number" id="age" value="38" min="18" max="100" required></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Education Level</label>
+            <div class="input-wrapper">
+              <select id="education">
+                <option value="Bachelor's" selected>Bachelor's</option>
+                <option value="High School">High School</option>
+                <option value="Master's">Master's</option>
+                <option value="PhD">PhD</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Marital Status</label>
+            <div class="input-wrapper">
+              <select id="maritalStatus">
+                <option value="Married" selected>Married</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Single">Single</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-label">2. Financial & Employment Metrics</div>
+        <div class="grid-3">
+          <div class="field-group">
+            <label class="field-label">Annual Income ($)</label>
+            <div class="input-wrapper"><input type="number" id="income" value="82000" min="1000" required></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Employment Type</label>
+            <div class="input-wrapper">
+              <select id="employmentType">
+                <option value="Full-time" selected>Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Self-employed">Self-employed</option>
+                <option value="Unemployed">Unemployed</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Months Employed</label>
+            <div class="input-wrapper"><input type="number" id="monthsEmployed" value="60" min="0" required></div>
+          </div>
+        </div>
+
+        <div class="section-label">3. Credit History & Debt Ratios</div>
+        <div class="grid-3">
+          <div class="field-group">
+            <label class="field-label">Credit Score (300 - 900)</label>
+            <div class="input-wrapper"><input type="number" id="creditScore" value="740" min="300" max="900" required></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">DTI Ratio (0.01 - 1.00)</label>
+            <div class="input-wrapper"><input type="number" step="0.01" id="dtiRatio" value="0.28" min="0.01" max="1.50" required></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Num Credit Lines</label>
+            <div class="input-wrapper"><input type="number" id="numCreditLines" value="4" min="0" max="30" required></div>
+          </div>
+        </div>
+
+        <div class="section-label">4. Loan Terms & Specifications</div>
+        <div class="grid-3">
+          <div class="field-group">
+            <label class="field-label">Requested Loan Amount ($)</label>
+            <div class="input-wrapper"><input type="number" id="loanAmount" value="28000" min="500" required></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Interest Rate (%)</label>
+            <div class="input-wrapper"><input type="number" step="0.1" id="interestRate" value="9.5" min="1" max="40" required></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Loan Term (Months)</label>
+            <div class="input-wrapper"><input type="number" id="loanTerm" value="36" min="6" max="120" required></div>
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-top: 16px;">
+          <label class="field-label">Loan Purpose</label>
+          <div class="input-wrapper">
+            <select id="loanPurpose">
+              <option value="Business" selected>Business</option>
+              <option value="Auto">Auto</option>
+              <option value="Education">Education</option>
+              <option value="Home">Home</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-label">5. Collateral & Risk Flags</div>
+        <div class="grid-3">
+          <div class="switch-card active" id="mortgageCard" onclick="toggleSwitch('mortgageCard', 'hasMortgage')">
+            <div>
+              <div class="switch-title">Has Mortgage</div>
+              <div class="switch-sub">Existing property loan</div>
+            </div>
+            <div class="toggle-pill" id="hasMortgagePill">Yes</div>
+            <input type="hidden" id="hasMortgage" value="true">
+          </div>
+
+          <div class="switch-card" id="dependentsCard" onclick="toggleSwitch('dependentsCard', 'hasDependents')">
+            <div>
+              <div class="switch-title">Has Dependents</div>
+              <div class="switch-sub">Dependent family members</div>
+            </div>
+            <div class="toggle-pill" id="hasDependentsPill">No</div>
+            <input type="hidden" id="hasDependents" value="false">
+          </div>
+
+          <div class="switch-card active" id="cosignerCard" onclick="toggleSwitch('cosignerCard', 'hasCoSigner')">
+            <div>
+              <div class="switch-title">Has Co-Signer</div>
+              <div class="switch-sub">Guarantor attached</div>
+            </div>
+            <div class="toggle-pill" id="hasCoSignerPill">Yes</div>
+            <input type="hidden" id="hasCoSigner" value="true">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="load-default-btn" onclick="loadApplicantPreset('default')">
+            <span>🔄</span> Load Default Applicant
+          </button>
+          <button type="submit" class="cta-btn" id="ctaBtn">
+            <div class="spinner" id="btnSpinner"></div>
+            <span id="btnText">Evaluate Default Risk with ML Model</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Output Result Banner -->
+    <div class="result-banner" id="resultBanner">
+      <div class="res-badge-box">
+        <div style="font-size: 13px; font-weight: 700; color: #334155;">
+          Active Model Prediction (<span id="activeModelLabel">Logistic Regression</span>):
+        </div>
+        <div class="binary-pill" id="binaryPill">Will Default: NO (Class 0)</div>
+      </div>
+
+      <div class="res-title" id="resTitle">Default Predicted: NO (Class 0)</div>
+      <div class="res-sub" id="resSub">ML model predicts applicant will NOT default on loan repayment.</div>
+      
+      <div class="meter-wrap">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700;">
+          <span>Default Risk Probability: <span id="probVal">3.8%</span></span>
+          <span style="font-size: 11px; color: var(--slate-muted); font-weight: 600;">Decision Threshold: 50.0%</span>
+        </div>
+        <div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
+      </div>
+
+      <div style="margin-top: 18px; font-size: 13px; line-height: 1.6;" id="factorsList"></div>
+
+      <!-- Cross-Model Prediction Consensus -->
+      <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(0,0,0,0.08);">
+        <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; color: #475569;">
+          Cross-Model Prediction Breakdown for this Applicant:
+        </div>
+        <div class="model-eval-grid" id="modelEvalGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Best Model & All Models Accuracy Banner -->
+    <div class="best-model-banner">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div class="best-badge">👑 Model Benchmark • Project Accuracies</div>
+          <h3 style="font-size: 22px; font-weight: 800; margin-top: 8px;">All Machine Learning Models Leaderboard</h3>
+          <p style="font-size: 13px; color: #94A3B8; margin-top: 4px;">Trained on 255,347 loan records using exact notebook classification pipelines.</p>
+        </div>
+        <div style="background: rgba(245, 158, 11, 0.18); border: 1.5px solid #F59E0B; padding: 12px 22px; border-radius: 16px; text-align: right;">
+          <div style="font-size: 11px; color: #FCD34D; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Highest Accuracy Model</div>
+          <div style="font-size: 22px; font-weight: 800; color: #FFFFFF;" id="topModelText">Gradient Boosting (88.73%)</div>
+        </div>
+      </div>
+
+      <div class="model-list" id="modelLeaderboard">
+        <!-- Rendered dynamically from backend /api/models -->
+      </div>
+    </div>
+
+    <!-- Comprehensive Metrics Table -->
+    <div class="info-card">
+      <div class="info-header" onclick="toggleCard('metricsBody', 'metricsIcon')">
+        <span>📈 Detailed Model Comparison Table (All 6 Algorithms)</span>
+        <span id="metricsIcon">▼</span>
+      </div>
+      <div class="info-body" id="metricsBody">
+        <p style="font-size: 13px; color: var(--slate-muted); margin-bottom: 12px;">
+          Metrics evaluated on test split (51,070 records) with 5-fold Stratified Cross-Validation.
+        </p>
+        <div class="table-container">
+          <table class="metrics-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+                <th>ROC-AUC</th>
+                <th>CV Mean Accuracy</th>
+              </tr>
+            </thead>
+            <tbody id="metricsTableBody">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confusion Matrix Card -->
+    <div class="info-card">
+      <div class="info-header" onclick="toggleCard('cmBody', 'cmIcon')">
+        <span>📊 Model Confusion Matrix & Classification Breakdown</span>
+        <span id="cmIcon">▼</span>
+      </div>
+      <div class="info-body" id="cmBody">
+        <div class="cm-selector-row">
+          <p style="font-size: 13px; color: var(--slate-muted);">
+            Visualizes True Positives, True Negatives, Type I (False Positive) and Type II (False Negative) errors on the test dataset.
+          </p>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="font-size: 12px; font-weight: 700; color: #475569;">Select Model CM:</label>
+            <select id="cmModelSelect" class="model-select" onchange="renderSelectedCM()">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--slate-muted); letter-spacing: 0.5px; text-align: center; margin-bottom: 8px;">Predicted Class</div>
+        
+        <div class="cm-grid-container">
+          <div class="cm-header">Actual Class</div>
+          <div class="cm-header">Pred: 0 (No Default)</div>
+          <div class="cm-header">Pred: 1 (Will Default)</div>
+
+          <!-- Actual 0 (Paid) -->
+          <div class="cm-header">Actual: 0<br><span style="font-size: 9px; font-weight: 500;">(Non-Default)</span></div>
+          <div class="cm-cell correct">
+            <div class="cm-lbl">True Negative (TN)</div>
+            <div class="cm-val" id="cmTN">44,810</div>
+            <div class="cm-sub">Correctly Predicted Paid</div>
+          </div>
+          <div class="cm-cell incorrect">
+            <div class="cm-lbl">False Positive (FP)</div>
+            <div class="cm-val" id="cmFP">124</div>
+            <div class="cm-sub">Type I Error (False Alarm)</div>
+          </div>
+
+          <!-- Actual 1 (Default) -->
+          <div class="cm-header">Actual: 1<br><span style="font-size: 9px; font-weight: 500;">(Defaulted)</span></div>
+          <div class="cm-cell incorrect">
+            <div class="cm-lbl">False Negative (FN)</div>
+            <div class="cm-val" id="cmFN">5,708</div>
+            <div class="cm-sub">Type II Error (Missed Default)</div>
+          </div>
+          <div class="cm-cell correct">
+            <div class="cm-lbl">True Positive (TP)</div>
+            <div class="cm-val" id="cmTP">192</div>
+            <div class="cm-sub">Correctly Predicted Default</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let globalModelsData = null;
+    let globalPresets = null;
+
+    // Detect base API URL (supports direct Flask port 5000 or Node proxy port 8080)
+    const API_BASE = window.location.port === '8080' ? '' : (window.location.origin.includes('5000') ? '' : 'http://127.0.0.1:5000');
+
+    async function initApp() {
+      await fetchModelsMetrics();
+      await fetchApplicantPresets();
+      // Auto run prediction on default applicant upon load
+      runPrediction();
+    }
+
+    async function fetchModelsMetrics() {
+      try {
+        const res = await fetch(`${API_BASE}/api/models`);
+        if (!res.ok) throw new Error('Failed to load models');
+        const data = await res.json();
+        globalModelsData = data;
+
+        document.getElementById('backendBadge').className = 'badge-status connected';
+        document.getElementById('backendStatusText').textContent = 'ML Backend: Connected & Active';
+
+        renderLeaderboard(data.models);
+        renderMetricsTable(data.models);
+        populateCMSelector(data.models);
+        renderSelectedCM();
+      } catch (err) {
+        console.warn('Backend fetch notice:', err);
+        document.getElementById('backendBadge').className = 'badge-status';
+        document.getElementById('backendStatusText').textContent = 'ML Backend: Connecting...';
+      }
+    }
+
+    async function fetchApplicantPresets() {
+      try {
+        const res = await fetch(`${API_BASE}/api/default-applicant`);
+        if (res.ok) {
+          globalPresets = await res.json();
+        }
+      } catch (err) {
+        console.warn('Preset fetch error:', err);
+      }
+    }
+
+    function renderLeaderboard(models) {
+      const container = document.getElementById('modelLeaderboard');
+      container.innerHTML = '';
+
+      const sorted = [...models].sort((a, b) => b.accuracy - a.accuracy);
+      const best = sorted[0];
+      document.getElementById('topModelText').textContent = `${best.name} (${(best.accuracy * 100).toFixed(2)}%)`;
+
+      sorted.forEach((m, idx) => {
+        const isBest = idx === 0;
+        const icon = isBest ? '🏆' : (idx === 1 ? '🌲' : (idx === 2 ? '📈' : (idx === 3 ? '⚡' : (idx === 4 ? '📍' : '🌳'))));
+        const accPct = (m.accuracy * 100).toFixed(2);
+        const auc = m.roc_auc ? ` • AUC: ${(m.roc_auc).toFixed(3)}` : '';
+
+        const item = document.createElement('div');
+        item.className = `model-item ${isBest ? 'highlight' : ''}`;
+        item.innerHTML = `
+          <div class="model-info">
+            <div class="model-icon">${icon}</div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="model-name">${m.name}</span>
+                <span style="background: ${isBest ? '#F59E0B' : '#334155'}; color: ${isBest ? '#0F172A' : '#F8FAFC'}; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.5px;">${m.badge || 'Trained Model'}</span>
+              </div>
+              <div class="model-desc">${m.description}</div>
+            </div>
+          </div>
+          <div class="model-score">
+            <div class="score-acc">${accPct}%</div>
+            <div class="score-label">Accuracy${auc}</div>
+            <div class="acc-bar-bg"><div class="acc-bar-fill" style="width: ${accPct}%;"></div></div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderMetricsTable(models) {
+      const tbody = document.getElementById('metricsTableBody');
+      tbody.innerHTML = '';
+
+      const sorted = [...models].sort((a, b) => b.accuracy - a.accuracy);
+      sorted.forEach((m) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${m.name}</strong></td>
+          <td><span style="color: #059669; font-weight: 700;">${(m.accuracy * 100).toFixed(2)}%</span></td>
+          <td>${(m.precision * 100).toFixed(2)}%</td>
+          <td>${(m.recall * 100).toFixed(2)}%</td>
+          <td>${(m.f1_score * 100).toFixed(2)}%</td>
+          <td>${m.roc_auc ? (m.roc_auc).toFixed(4) : 'N/A'}</td>
+          <td>${m.cv_mean_accuracy ? (m.cv_mean_accuracy * 100).toFixed(2) + '%' : 'N/A'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function populateCMSelector(models) {
+      const select = document.getElementById('cmModelSelect');
+      select.innerHTML = '';
+      models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = `${m.name} (${(m.accuracy * 100).toFixed(1)}%)`;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderSelectedCM() {
+      if (!globalModelsData || !globalModelsData.models) return;
+      const select = document.getElementById('cmModelSelect');
+      const selectedId = select.value;
+      const m = globalModelsData.models.find(item => item.id === selectedId) || globalModelsData.models[0];
+
+      if (m && m.confusion_matrix) {
+        document.getElementById('cmTN').textContent = m.confusion_matrix.tn.toLocaleString();
+        document.getElementById('cmFP').textContent = m.confusion_matrix.fp.toLocaleString();
+        document.getElementById('cmFN').textContent = m.confusion_matrix.fn.toLocaleString();
+        document.getElementById('cmTP').textContent = m.confusion_matrix.tp.toLocaleString();
+      }
+    }
+
+    function toggleSwitch(cardId, hiddenId) {
+      const card = document.getElementById(cardId);
+      const input = document.getElementById(hiddenId);
+      const pill = document.getElementById(hiddenId + 'Pill');
+      const val = input.value === 'true';
+
+      input.value = (!val).toString();
+      if (!val) {
+        card.classList.add('active');
+        pill.textContent = 'Yes';
+      } else {
+        card.classList.remove('active');
+        pill.textContent = 'No';
+      }
+    }
+
+    function setSwitch(cardId, hiddenId, boolVal) {
+      const card = document.getElementById(cardId);
+      const input = document.getElementById(hiddenId);
+      const pill = document.getElementById(hiddenId + 'Pill');
+      input.value = boolVal.toString();
+      if (boolVal) {
+        card.classList.add('active');
+        pill.textContent = 'Yes';
+      } else {
+        card.classList.remove('active');
+        pill.textContent = 'No';
+      }
+    }
+
+    function toggleCard(bodyId, iconId) {
+      const body = document.getElementById(bodyId);
+      const icon = document.getElementById(iconId);
+      if (body.style.display === 'none') {
+        body.style.display = 'block';
+        icon.textContent = '▲';
+      } else {
+        body.style.display = 'none';
+        icon.textContent = '▼';
+      }
+    }
+
+    function loadApplicantPreset(presetKey) {
+      // Highlight preset button
+      ['btnPresetDefault', 'btnPresetBorderline', 'btnPresetHighRisk'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('default-active');
+      });
+
+      if (presetKey === 'default') document.getElementById('btnPresetDefault')?.classList.add('default-active');
+      if (presetKey === 'borderline') document.getElementById('btnPresetBorderline')?.classList.add('default-active');
+      if (presetKey === 'high_risk') document.getElementById('btnPresetHighRisk')?.classList.add('default-active');
+
+      let data = null;
+      if (globalPresets && globalPresets[presetKey]) {
+        data = globalPresets[presetKey];
+      } else {
+        // Fallback default presets if server is spinning up
+        const fallbacks = {
+          default: {
+            age: 38, education: "Bachelor's", maritalStatus: "Married",
+            income: 82000, employmentType: "Full-time", monthsEmployed: 60,
+            creditScore: 740, dtiRatio: 0.28, numCreditLines: 4,
+            loanAmount: 28000, interestRate: 9.5, loanTerm: 36, loanPurpose: "Business",
+            hasMortgage: true, hasDependents: false, hasCoSigner: true
+          },
+          borderline: {
+            age: 31, education: "Bachelor's", maritalStatus: "Divorced",
+            income: 48000, employmentType: "Part-time", monthsEmployed: 24,
+            creditScore: 635, dtiRatio: 0.44, numCreditLines: 5,
+            loanAmount: 26000, interestRate: 15.0, loanTerm: 48, loanPurpose: "Auto",
+            hasMortgage: false, hasDependents: false, hasCoSigner: false
+          },
+          high_risk: {
+            age: 22, education: "High School", maritalStatus: "Single",
+            income: 22000, employmentType: "Unemployed", monthsEmployed: 6,
+            creditScore: 510, dtiRatio: 0.65, numCreditLines: 9,
+            loanAmount: 48000, interestRate: 22.5, loanTerm: 60, loanPurpose: "Other",
+            hasMortgage: false, hasDependents: true, hasCoSigner: false
+          }
+        };
+        data = fallbacks[presetKey] || fallbacks.default;
+      }
+
+      // Populate form
+      document.getElementById('age').value = data.age;
+      document.getElementById('education').value = data.education;
+      document.getElementById('maritalStatus').value = data.maritalStatus;
+      document.getElementById('income').value = data.income;
+      document.getElementById('employmentType').value = data.employmentType;
+      document.getElementById('monthsEmployed').value = data.monthsEmployed;
+      document.getElementById('creditScore').value = data.creditScore;
+      document.getElementById('dtiRatio').value = data.dtiRatio;
+      document.getElementById('numCreditLines').value = data.numCreditLines;
+      document.getElementById('loanAmount').value = data.loanAmount;
+      document.getElementById('interestRate').value = data.interestRate;
+      document.getElementById('loanTerm').value = data.loanTerm;
+      document.getElementById('loanPurpose').value = data.loanPurpose;
+
+      setSwitch('mortgageCard', 'hasMortgage', data.hasMortgage);
+      setSwitch('dependentsCard', 'hasDependents', data.hasDependents);
+      setSwitch('cosignerCard', 'hasCoSigner', data.hasCoSigner);
+
+      // Trigger instant prediction with backend
+      runPrediction();
+    }
+
+    async function runPrediction() {
+      const btn = document.getElementById('ctaBtn');
+      const text = document.getElementById('btnText');
+      const spinner = document.getElementById('btnSpinner');
+      const banner = document.getElementById('resultBanner');
+      const activeModelSelect = document.getElementById('activeModelSelect');
+      const selectedModelId = activeModelSelect.value;
+      const selectedModelName = activeModelSelect.options[activeModelSelect.selectedIndex].text;
+
+      btn.disabled = true;
+      spinner.style.display = 'block';
+      text.textContent = 'Evaluating ML Classification Engine...';
+
+      const payload = {
+        modelId: selectedModelId,
+        age: parseInt(document.getElementById('age').value),
+        education: document.getElementById('education').value,
+        maritalStatus: document.getElementById('maritalStatus').value,
+        income: parseFloat(document.getElementById('income').value),
+        employmentType: document.getElementById('employmentType').value,
+        monthsEmployed: parseInt(document.getElementById('monthsEmployed').value),
+        creditScore: parseInt(document.getElementById('creditScore').value),
+        dtiRatio: parseFloat(document.getElementById('dtiRatio').value),
+        numCreditLines: parseInt(document.getElementById('numCreditLines').value),
+        loanAmount: parseFloat(document.getElementById('loanAmount').value),
+        interestRate: parseFloat(document.getElementById('interestRate').value),
+        loanTerm: parseInt(document.getElementById('loanTerm').value),
+        loanPurpose: document.getElementById('loanPurpose').value,
+        hasMortgage: document.getElementById('hasMortgage').value === 'true',
+        hasDependents: document.getElementById('hasDependents').value === 'true',
+        hasCoSigner: document.getElementById('hasCoSigner').value === 'true'
+      };
+
+      try {
+        const response = await fetch(`${API_BASE}/api/predict`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error('API server returned error status');
+        const res = await response.json();
+
+        // Update UI
+        banner.style.display = 'block';
+        banner.className = 'result-banner ' + (res.is_approved ? 'result-approved' : 'result-declined');
+
+        document.getElementById('activeModelLabel').textContent = selectedModelName;
+        const pill = document.getElementById('binaryPill');
+        pill.textContent = `Will Default: ${res.prediction_text} (Class ${res.prediction})`;
+        pill.style.background = res.is_approved ? '#10B981' : '#EF4444';
+
+        document.getElementById('resTitle').textContent = res.title;
+        document.getElementById('resSub').textContent = res.subtitle;
+        document.getElementById('probVal').textContent = res.default_probability + '%';
+
+        const fill = document.getElementById('meterFill');
+        fill.style.width = res.default_probability + '%';
+        fill.style.background = res.is_approved ? '#10B981' : '#EF4444';
+
+        // Factors list
+        let factorsHtml = '';
+        if (res.positive_factors && res.positive_factors.length) {
+          factorsHtml += '<div style="color: #065F46; font-weight: 700; margin-bottom: 4px;">✓ Positive Credit Indicators:</div>';
+          res.positive_factors.forEach(f => {
+            factorsHtml += `<div style="margin-left: 12px; color: #047857;">• ${f}</div>`;
+          });
+        }
+        if (res.risk_factors && res.risk_factors.length) {
+          factorsHtml += '<div style="color: #991B1B; font-weight: 700; margin-top: 8px; margin-bottom: 4px;">⚠ Identified Risk Factors:</div>';
+          res.risk_factors.forEach(f => {
+            factorsHtml += `<div style="margin-left: 12px; color: #B91C1C;">• ${f}</div>`;
+          });
+        }
+        document.getElementById('factorsList').innerHTML = factorsHtml;
+
+        // Model breakdown chips
+        const evalGrid = document.getElementById('modelEvalGrid');
+        evalGrid.innerHTML = '';
+        if (res.all_model_evaluations) {
+          const names = {
+            logistic_regression: "Logistic Regression",
+            naive_bayes: "Naive Bayes",
+            decision_tree: "Decision Tree"
+          };
+          for (const [key, evalData] of Object.entries(res.all_model_evaluations)) {
+            const chip = document.createElement('div');
+            chip.className = 'model-eval-chip';
+            chip.innerHTML = `
+              <div class="eval-chip-name">${names[key] || key}</div>
+              <div class="eval-chip-val" style="color: ${evalData.is_approved ? '#059669' : '#DC2626'};">
+                ${evalData.is_approved ? 'Approved (Class 0)' : 'Default (Class 1)'}
+              </div>
+              <div style="font-size: 11px; color: #64748B;">P(Default) = ${evalData.probability}%</div>
+            `;
+            evalGrid.appendChild(chip);
+          }
+        }
+
+      } catch (err) {
+        console.error('Prediction failed, falling back to local model logic:', err);
+        // Fallback local calculation
+        const creditScore = payload.creditScore;
+        const dti = payload.dtiRatio;
+        const cosigner = payload.hasCoSigner;
+
+        let z = -2.0;
+        z -= ((creditScore - 650) / 100.0) * 0.85;
+        z += (dti - 0.35) * 3.5;
+        if (!cosigner) z += 0.70;
+
+        const prob = Math.min(Math.max((1.0 / (1.0 + Math.exp(-z))) * 100, 0.1), 99.9);
+        const isApproved = prob < 50.0;
+
+        banner.style.display = 'block';
+        banner.className = 'result-banner ' + (isApproved ? 'result-approved' : 'result-declined');
+        document.getElementById('binaryPill').textContent = `Will Default: ${isApproved ? 'NO (Class 0)' : 'YES (Class 1)'}`;
+        document.getElementById('binaryPill').style.background = isApproved ? '#10B981' : '#EF4444';
+        document.getElementById('resTitle').textContent = isApproved ? 'Default Predicted: NO (Class 0)' : 'Default Predicted: YES (Class 1)';
+        document.getElementById('probVal').textContent = prob.toFixed(1) + '%';
+        document.getElementById('meterFill').style.width = prob.toFixed(1) + '%';
+      } finally {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        text.textContent = 'Evaluate Default Risk with ML Model';
+      }
+    }
+
+    // Initialize application on page load
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

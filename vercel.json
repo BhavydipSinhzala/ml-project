@@ -1,7 +1,7 @@
 {
   "functions": {
-    "backend/app.py": {
-      "includeFiles": "{saved_models/**,../templates/**,../static/**}"
+    "backend/**": {
+      "includeFiles": "{backend/saved_models/**,templates/**,static/**}"
     }
   },
   "rewrites": [
